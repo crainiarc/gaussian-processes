@@ -1,2 +1,2 @@
-gaussian-processes
-==================
+Gaussian Processes Library
+==========================
