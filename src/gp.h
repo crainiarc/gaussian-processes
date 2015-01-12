@@ -22,6 +22,7 @@ public:
     auto learn() -> void;
     auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>>;
     auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>;
+    auto predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double>;
     
 protected:
     bool mAutoLearn;

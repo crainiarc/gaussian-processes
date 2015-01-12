@@ -16,9 +16,16 @@ GaussianProcess::GaussianProcess(kernel_func_t kernelFunc, double noiseVar) :
 auto GaussianProcess::setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void {
     mTrainingSet = data;
     mObservations = observations;
+    
+    if (mAutoLearn) {
+        learn();
+    }
 }
 
 auto GaussianProcess::addTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void {
+    if (mAutoLearn) {
+        learn();
+    }
 }
 
 auto GaussianProcess::learn() -> void {
@@ -33,12 +40,28 @@ auto GaussianProcess::learn() -> void {
     mAlpha = arma::solve(mCholesky.t(), y);
 }
 
-auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
-    return std::make_tuple(arma::Mat<double>(), arma::Mat<double>());
+auto GaussianProcess::predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
+    auto trainingTestCovariance = covarianceMatrix(mTrainingSet, testData);
+    auto testCovariance = covarianceMatrix(testData, testData);
+    auto v = arma::solve(mCholesky, trainingTestCovariance);
+    
+    auto mean = trainingTestCovariance.t() * mAlpha;
+    auto variance = testCovariance - (v.t() * v);
+    
+    return std::make_tuple(mean, variance);
 }
 
-auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double> {
-    return arma::Mat<double>();
+auto GaussianProcess::predictMean(const arma::Mat<double> &testData) -> arma::Mat<double> {
+    auto trainingTestCovariance = covarianceMatrix(mTrainingSet, testData);
+    return trainingTestCovariance.t() * mAlpha;
+}
+
+auto GaussianProcess::predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> {
+    auto trainingTestCovariance = covarianceMatrix(mTrainingSet, testData);
+    auto testCovariance = covarianceMatrix(testData, testData);
+    auto v = arma::solve(mCholesky, trainingTestCovariance);
+    
+    return testCovariance - (v.t() * v);
 }
 
 auto GaussianProcess::covarianceMatrix(const arma::Mat<double> X, const arma::Mat<double> Y) -> arma::Mat<double> {
