@@ -13,6 +13,10 @@ GaussianProcess::GaussianProcess(kernel_func_t kernelFunc, double noiseVar) :
         mAutoLearn = true;
 }
 
+GaussianProcess::GaussianProcess(kernel_func_t kernelFuct, double noiseVar, bool autoLearn) :
+    mKernelFunction(kernelFuct), mNoiseVariance(noiseVar), mAutoLearn(autoLearn) {
+}
+
 auto GaussianProcess::setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void {
     mTrainingSet = data;
     mObservations = observations;
@@ -23,6 +27,9 @@ auto GaussianProcess::setTrainingSet(const arma::Mat<double> &data, const arma::
 }
 
 auto GaussianProcess::addTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void {
+    mTrainingSet.insert_cols(mTrainingSet.n_cols, data);
+    mObservations.insert_rows(mObservations.n_rows, observations);
+    
     if (mAutoLearn) {
         learn();
     }

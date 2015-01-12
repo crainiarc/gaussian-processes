@@ -16,9 +16,11 @@ typedef std::function<double(arma::Col<double>, arma::Col<double>)> kernel_func_
 class GaussianProcess {
 public:
     GaussianProcess(kernel_func_t kernelFunc, double noiseVar);
+    GaussianProcess(kernel_func_t kernelFucc, double noiseVar, bool autoLearn);
     
     auto setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void;
     auto addTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void;
+    auto setAutoLearn(bool autoLearn) -> void;
     auto learn() -> void;
     auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>>;
     auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>;
