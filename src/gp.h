@@ -14,6 +14,8 @@
 typedef std::function<double(arma::Col<double>, arma::Col<double>)> kernel_func_t;
 
 class GaussianProcess {
+    friend class GaussianProcessTest;
+    
 public:
     GaussianProcess(kernel_func_t kernelFunc, double noiseVar);
     GaussianProcess(kernel_func_t kernelFucc, double noiseVar, bool autoLearn);
@@ -37,7 +39,7 @@ protected:
     arma::Mat<double> mCholesky;
     arma::Col<double> mAlpha;
     
-    auto covarianceMatrix(const arma::Mat<double> X, const arma::Mat<double> Y) -> arma::Mat<double>;
+    virtual auto covarianceMatrix(const arma::Mat<double> X, const arma::Mat<double> Y) -> arma::Mat<double>;
 };
 
 #endif /* defined(__GaussianProcess__gp__) */
