@@ -23,10 +23,10 @@ public:
     auto setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void;
     auto addTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &observations) -> void;
     auto setAutoLearn(bool autoLearn) -> void;
-    auto learn() -> void;
-    auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>>;
-    auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>;
-    auto predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double>;
+    virtual auto learn() -> void;
+    virtual auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>>;
+    virtual auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>;
+    virtual auto predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double>;
     
 protected:
     bool mAutoLearn;
