@@ -18,7 +18,7 @@ PITCSparseGP::PITCSparseGP(kernel_func_t kernelFunc, double noiseVar, int blockS
 
 auto PITCSparseGP::setInducingInputs(const arma::Mat<double> &inducingInputs) -> void {
     mInducingInputs = inducingInputs;
-    mInducingCovariances = covarianceMatrix(mInducingInputs, mInducingInputs);
+    mInducingCovariancesInverse = covarianceMatrix(mInducingInputs, mInducingInputs).i();
     
     if (mAutoLearn) {
         learn();
@@ -38,4 +38,15 @@ auto PITCSparseGP::predictMean(const arma::Mat<double> &testData) -> arma::Mat<d
 
 auto PITCSparseGP::predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> {
     return arma::Mat<double>();
+}
+
+auto PITCSparseGP::computeQ(const arma::Mat<double> &a, const arma::Mat<double> &b) -> arma::Mat<double> {
+    auto K_au = covarianceMatrix(a, mInducingInputs);
+    
+    if (&a == &b) {
+        return K_au * mInducingCovariancesInverse * K_au.i();
+    } else {
+        auto K_ub = covarianceMatrix(mInducingInputs, b);
+        return K_au * mInducingCovariancesInverse * K_ub;
+    }
 }

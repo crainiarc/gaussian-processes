@@ -28,7 +28,10 @@ public:
 protected:
     int mBlockSize;
     arma::Mat<double> mInducingInputs;
-    arma::Mat<double> mInducingCovariances;
+    arma::Mat<double> mInducingCovariancesInverse;
+    
+    auto computeQ(const arma::Mat<double> &a, const arma::Mat<double> &b) -> arma::Mat<double>;
+    
 };
 
 #endif /* defined(__GaussianProcess__sparse_pitc__) */
