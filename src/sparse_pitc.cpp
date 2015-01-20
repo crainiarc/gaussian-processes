@@ -16,18 +16,26 @@ PITCSparseGP::PITCSparseGP(kernel_func_t kernelFunc, double noiseVar, int blockS
     GaussianProcess(kernelFunc, noiseVar, autoLearn), mBlockSize(blockSize) {
 }
 
-auto learn() -> void {
+auto PITCSparseGP::setInducingInputs(const arma::Mat<double> &inducingInputs) -> void {
+    mInducingInputs = inducingInputs;
+    mInducingCovariances = covarianceMatrix(mInducingInputs, mInducingInputs);
     
+    if (mAutoLearn) {
+        learn();
+    }
 }
 
-auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
+auto PITCSparseGP::learn() -> void {
+}
+
+auto PITCSparseGP::predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
     return arma::Mat<double>();
 }
 
-auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>  {
+auto PITCSparseGP::predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>  {
     return arma::Mat<double>();
 }
 
-auto predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> {
+auto PITCSparseGP::predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> {
     return arma::Mat<double>();
 }

@@ -20,6 +20,11 @@ public:
     PITCSparseGP(kernel_func_t kernelFuct, double noiseVar, int blockSize, bool autoLearn);
     auto setInducingInputs(const arma::Mat<double> &inducingInputs) -> void;
     
+    virtual auto learn() -> void override;
+    virtual auto predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> override;
+    virtual auto predictMean(const arma::Mat<double> &testData) -> arma::Mat<double> override;
+    virtual auto predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> override;
+    
 protected:
     int mBlockSize;
     arma::Mat<double> mInducingInputs;
