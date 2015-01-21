@@ -37,15 +37,28 @@ auto PITCSparseGP::learn() -> void {
 }
 
 auto PITCSparseGP::predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
-    return arma::Mat<double>();
+    auto K_testinducing = covarianceMatrix(testData, mInducingInputs);
+    auto testCovariance  = covarianceMatrix(testData, testData);
+    auto Q_testtest = computeQ(testData, testData);
+    auto K_testinducingBigSigma = K_testinducing * mBigSigma;
+    
+    auto mean = K_testinducingBigSigma * mK_ufLambdaInverse * mObservations;
+    auto variance = testCovariance - Q_testtest + (K_testinducingBigSigma * K_testinducing.t());
+    return std::tuple<arma::Mat<double>, arma::Mat<double>>(mean, variance);
 }
 
 auto PITCSparseGP::predictMean(const arma::Mat<double> &testData) -> arma::Mat<double>  {
-    return arma::Mat<double>();
+    auto testInducingCovariance = covarianceMatrix(testData, mInducingInputs);
+    return testInducingCovariance * mBigSigma * mK_ufLambdaInverse * mObservations;
 }
 
 auto PITCSparseGP::predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> {
-    return arma::Mat<double>();
+    auto testInducingCovariance = covarianceMatrix(testData, mInducingInputs);
+    auto testCovariance = covarianceMatrix(testData, testData);
+    auto Q_testtest = computeQ(testData, testData);
+    
+    return testCovariance - Q_testtest + (testInducingCovariance * mBigSigma * testInducingCovariance.t());
+}
 
 auto PITCSparseGP::blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double> {
     if (mat.n_cols != mat.n_rows) {
