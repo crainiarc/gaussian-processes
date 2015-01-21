@@ -30,6 +30,7 @@ protected:
     arma::Mat<double> mInducingInputs;
     arma::Mat<double> mInducingCovariancesInverse;
     
+    auto blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double>;
     auto computeQ(const arma::Mat<double> &a, const arma::Mat<double> &b) -> arma::Mat<double>;
     
 };

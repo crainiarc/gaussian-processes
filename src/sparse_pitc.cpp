@@ -38,6 +38,25 @@ auto PITCSparseGP::predictMean(const arma::Mat<double> &testData) -> arma::Mat<d
 
 auto PITCSparseGP::predictVariance(const arma::Mat<double> &testData) -> arma::Mat<double> {
     return arma::Mat<double>();
+
+auto PITCSparseGP::blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double> {
+    if (mat.n_cols != mat.n_rows) {
+        // Not a square matrix
+        // TODO: Throw error
+        return arma::Mat<double>();
+    }
+    if (mat.n_cols % blockSize != 0) {
+        // Matrix cannot be blocked evenly
+        // TODO: Throw error
+        return arma::Mat<double>();
+    }
+    
+    arma::Mat<double> bMat = arma::Mat<double>(mat.n_rows, mat.n_cols);
+    for (unsigned int i = 0; i < mat.n_cols; ++i) {
+        auto lastRow = i + blockSize - 1;
+        bMat.submat(i, i, lastRow, lastRow) = mat.submat(i, i, lastRow, lastRow);
+    }
+    return bMat;
 }
 
 auto PITCSparseGP::computeQ(const arma::Mat<double> &a, const arma::Mat<double> &b) -> arma::Mat<double> {
