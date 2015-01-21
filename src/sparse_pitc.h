@@ -29,6 +29,9 @@ protected:
     int mBlockSize;
     arma::Mat<double> mInducingInputs;
     arma::Mat<double> mInducingCovariancesInverse;
+    arma::Mat<double> mK_uf;
+    arma::Mat<double> mK_ufLambdaInverse;
+    arma::Mat<double> mBigSigma;
     
     auto blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double>;
     auto computeQ(const arma::Mat<double> &a, const arma::Mat<double> &b) -> arma::Mat<double>;

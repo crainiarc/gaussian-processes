@@ -26,6 +26,14 @@ auto PITCSparseGP::setInducingInputs(const arma::Mat<double> &inducingInputs) ->
 }
 
 auto PITCSparseGP::learn() -> void {
+    auto K_ff = covarianceMatrix(mTrainingSet, mTrainingSet);
+    auto Q_ff = computeQ(mTrainingSet, mTrainingSet);
+    auto noiseMat = mNoiseVariance * arma::eye<arma::Mat<double>>(K_ff.n_rows, K_ff.n_cols);
+    auto lambdaInverse = blockDiagonal(K_ff - Q_ff + noiseMat, mBlockSize).i();
+    
+    mK_uf = covarianceMatrix(mInducingInputs, mTrainingSet);
+    mK_ufLambdaInverse = mK_uf * lambdaInverse;
+    mBigSigma = computeBigSigma(mInducingCovariancesInverse.i(), mK_uf.t(), mK_ufLambdaInverse);
 }
 
 auto PITCSparseGP::predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
