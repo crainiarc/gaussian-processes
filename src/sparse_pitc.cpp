@@ -69,3 +69,7 @@ auto PITCSparseGP::computeQ(const arma::Mat<double> &a, const arma::Mat<double> 
         return K_au * mInducingCovariancesInverse * K_ub;
     }
 }
+
+auto PITCSparseGP::computeBigSigma(const arma::Mat<double> K_uu, const arma::Mat<double> K_fu, const arma::Mat<double> K_ufLambdaInverse) -> arma::Mat<double> {
+    return (K_uu + (K_ufLambdaInverse * K_fu)).i();
+}
