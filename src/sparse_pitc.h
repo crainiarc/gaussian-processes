@@ -35,7 +35,8 @@ protected:
     
     auto blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double>;
     auto computeQ(const arma::Mat<double> &a, const arma::Mat<double> &b) -> arma::Mat<double>;
-    auto computeBigSigma(const arma::Mat<double> K_uu, const arma::Mat<double> K_fu, const arma::Mat<double> K_ufLambdaInverse) -> arma::Mat<double>;
+    auto computeBigSigma(const arma::Mat<double> K_uu, const arma::Mat<double> K_fu,
+                         const arma::Mat<double> K_ufLambdaInverse) -> arma::Mat<double>;
 };
 
 #endif /* defined(__GaussianProcess__sparse_pitc__) */

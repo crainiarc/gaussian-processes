@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Keng Kiat Lim. All rights reserved.
 //
 
+#include <stdexcept>
 #include "sparse_pitc.h"
 
 PITCSparseGP::PITCSparseGP(kernel_func_t kernelFunc, double noiseVar, int blockSize) :
@@ -63,17 +64,15 @@ auto PITCSparseGP::predictVariance(const arma::Mat<double> &testData) -> arma::M
 auto PITCSparseGP::blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double> {
     if (mat.n_cols != mat.n_rows) {
         // Not a square matrix
-        // TODO: Throw error
-        return arma::Mat<double>();
-    }
-    if (mat.n_cols % blockSize != 0) {
+        throw std::logic_error("Matrix 'mat' is not a square matrix");
+        
+    } else if (mat.n_cols % blockSize != 0) {
         // Matrix cannot be blocked evenly
-        // TODO: Throw error
-        return arma::Mat<double>();
+        throw std::logic_error("Matrix cannot be evenly blocked");
     }
     
     arma::Mat<double> bMat = arma::Mat<double>(mat.n_rows, mat.n_cols);
-    for (unsigned int i = 0; i < mat.n_cols; ++i) {
+    for (unsigned int i = 0; i < mat.n_cols; i += blockSize) {
         auto lastRow = i + blockSize - 1;
         bMat.submat(i, i, lastRow, lastRow) = mat.submat(i, i, lastRow, lastRow);
     }
@@ -91,6 +90,7 @@ auto PITCSparseGP::computeQ(const arma::Mat<double> &a, const arma::Mat<double> 
     }
 }
 
-auto PITCSparseGP::computeBigSigma(const arma::Mat<double> K_uu, const arma::Mat<double> K_fu, const arma::Mat<double> K_ufLambdaInverse) -> arma::Mat<double> {
+auto PITCSparseGP::computeBigSigma(const arma::Mat<double> K_uu, const arma::Mat<double> K_fu,
+                                   const arma::Mat<double> K_ufLambdaInverse) -> arma::Mat<double> {
     return (K_uu + (K_ufLambdaInverse * K_fu)).i();
 }
