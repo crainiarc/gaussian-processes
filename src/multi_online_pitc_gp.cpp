@@ -82,7 +82,7 @@ auto MultiOutputOnlinePITCGP::linearizeObservations(const arma::Mat<double> &obs
     return observations;
 }
 
-auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X, int q) -> arma::Mat<double> {
+auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X) -> arma::Mat<double> {
     auto kff = arma::Mat<double>(X.n_rows, X.n_rows);
     auto N = X.n_rows / mOutputDimensions;
     
@@ -93,7 +93,7 @@ auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X, int q) -> a
                 for (auto n2 = 0; n2 < n1; ++n2) {
                     auto idx2 = (q2 * N) + n2;
                     
-                    kff(idx1, idx2) = ggXggKernCompute(X.row(n1).t(), X.row(n2).t(), q1, q2);
+                    kff(idx1, idx2) = ggXggKernCompute(X.row(idx1).t(), X.row(idx2).t(), q1 + 1, q2 + 1);
                     kff(idx2, idx1) = kff(idx1, idx2);
                 }
             }
@@ -101,7 +101,7 @@ auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X, int q) -> a
         
         for (auto n1 = 0; n1 < N; ++n1) {
             auto idx = (q1 * N) + n1;
-            kff(idx, idx) = whiteKernCompute(q1);
+            kff(idx, idx) = whiteKernCompute(q1 + 1);
         }
     }
     
@@ -116,7 +116,7 @@ auto MultiOutputOnlinePITCGP::computeKfu(const arma::Mat<double> &X) -> arma::Ma
         for (auto n = 0; n < N; ++n) {
             for (auto i = 0; i < mLatentVariables.n_rows; ++i) {
                 auto idx1 = (q*N) + n;
-                kfu(idx1, i) = ggXgaussKernCompute(X.row(idx1).t(), mLatentVariables.row(i).t(), q);
+                kfu(idx1, i) = ggXgaussKernCompute(X.row(idx1).t(), mLatentVariables.row(i).t(), q + 1);
             }
         }
     }
@@ -138,8 +138,23 @@ auto MultiOutputOnlinePITCGP::computeKuu(const arma::Mat<double> &X) -> arma::Ma
     return kuu;
 }
 
-auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X, int q) -> arma::Mat<double> {
-    return arma::Mat<double>();
+auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X) -> arma::Mat<double> {
+    auto ktf = arma::Mat<double>(X_star.n_rows, X_star.n_rows);
+    auto N_star = X_star.n_rows / mOutputDimensions;
+    auto N = X.n_rows / mOutputDimensions;
+    
+    for (auto q1 = 0; q1 < mOutputDimensions; ++q1) {
+        for (auto q2 = 0; q2 < mOutputDimensions; ++q2) {
+            for (auto n1 = 0; n1 < N_star; ++n1) {
+                for (auto n2 = 0; n2 < N; ++n2) {
+                    auto idx1 = (q1 * N_star) + n1;
+                    auto idx2 = (q2 * N) + n2;
+                    ktf(idx1, idx2) = ggXggKernCompute(X_star.row(idx1).t(), X.row(idx2).t(), q1 + 1, q2 + 1);
+                }
+            }
+        }
+    }
+    return ktf;
 }
 
 auto MultiOutputOnlinePITCGP::computeKDiag(int pos) -> double {
