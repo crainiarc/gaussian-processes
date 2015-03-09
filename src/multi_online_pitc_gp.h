@@ -56,6 +56,7 @@ protected:
     arma::Col<double> mObservations;
     MultiOutputHyperparameters mHypers;
     
+    arma::Mat<double> mKuu;
     arma::Mat<double> mGlobalD;
     arma::Mat<double> mGlobalE;
     
@@ -63,6 +64,7 @@ protected:
     auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double>;
     auto computeKff(const arma::Mat<double> &X) -> arma::Mat<double>;
     auto computeKfu(const arma::Mat<double> &X) -> arma::Mat<double>;
+    auto computeKfuSingular(const arma::Mat<double> &X, int q) -> arma::Mat<double>;
     auto computeKuu(const arma::Mat<double> &X) -> arma::Mat<double>;
     auto computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X) -> arma::Mat<double>;
     auto computeKDiag(int pos) -> double;

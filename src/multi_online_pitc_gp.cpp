@@ -70,6 +70,8 @@ auto MultiOutputOnlinePITCGP::predictVariance(const arma::Mat<double> &testData)
 auto MultiOutputOnlinePITCGP::initHyperparameters() -> void {
     mHypers.precisionYsInv = 1.0 / mHypers.precisionYs;
     mHypers.precisionUsInv = 1.0 / mHypers.precisionUs;
+    
+    mKuu = computeKuu(mLatentVariables);
 }
 
 auto MultiOutputOnlinePITCGP::linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double> {
@@ -118,6 +120,18 @@ auto MultiOutputOnlinePITCGP::computeKfu(const arma::Mat<double> &X) -> arma::Ma
                 auto idx1 = (q*N) + n;
                 kfu(idx1, i) = ggXgaussKernCompute(X.row(idx1).t(), mLatentVariables.row(i).t(), q + 1);
             }
+        }
+    }
+    
+    return kfu;
+}
+
+auto MultiOutputOnlinePITCGP::computeKfuSingular(const arma::Mat<double> &X, int q) -> arma::Mat<double> {
+    auto kfu = arma::Mat<double>(X.n_rows, mLatentVariables.n_rows);
+    
+    for (auto n = 0; n < X.n_rows; ++n) {
+        for (auto i = 0; i < mLatentVariables.n_rows; ++i) {
+            kfu(n, i) = ggXgaussKernCompute(X.row(n).t(), mLatentVariables.row(i).t(), q + 1);
         }
     }
     
