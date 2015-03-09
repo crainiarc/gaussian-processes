@@ -158,7 +158,7 @@ auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const 
 }
 
 auto MultiOutputOnlinePITCGP::computeKDiag(int pos) -> double {
-    return 0.0;
+    return whiteKernCompute(pos) + ggDiagKernCompute(pos);
 }
 
 auto MultiOutputOnlinePITCGP::gaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y) -> double {
