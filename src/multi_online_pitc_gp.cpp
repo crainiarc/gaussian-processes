@@ -57,6 +57,9 @@ auto MultiOutputOnlinePITCGP::predictVariance(const arma::Mat<double> &testData)
 auto MultiOutputOnlinePITCGP::initHyperparameters() {
 }
 
+auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double> {
+}
+
 auto MultiOutputOnlinePITCGP::computeKff(arma::Mat<double> X, int q) -> arma::Mat<double> {
     return arma::Mat<double>;
 }

@@ -47,14 +47,15 @@ protected:
     bool mAutoLearn;
     
     arma::Mat<double> mTrainingSet;
-    arma::Mat<double> mObservations;
     arma::Mat<double> mLatentVariables;
+    arma::Col<double> mObservations;
     MultiOutputHyperparameters mHyperparameters;
     
     arma::Mat<double> mGlobalD;
     arma::Mat<double> mGlobalE;
     
     auto initHyperparameters() -> void;
+    auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double>;
     auto computeKff(arma::Mat<double> X, int q) -> arma::Mat<double>;
     auto computeKfu(arma::Mat<double> X, int q) -> arma::Mat<double>;
     auto computeKuu(arma::Mat<double> X) -> arma::Mat<double>;
