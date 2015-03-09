@@ -89,7 +89,17 @@ auto MultiOutputOnlinePITCGP::computeKfu(const arma::Mat<double> &X, int q) -> a
 }
 
 auto MultiOutputOnlinePITCGP::computeKuu(const arma::Mat<double> &X) -> arma::Mat<double> {
-    return arma::Mat<double>();
+    auto kuu = arma::Mat<double>(X.n_rows, X.n_rows);
+    for (auto i = 0; i < X.n_rows; ++i) {
+        for (auto j = 0; j < i; ++j) {
+            kuu(i, j) = gaussKernCompute(X.row(i).t(), X.row(j).t());
+            kuu(j, i) = kuu(i, j);
+        }
+        kuu(i, i) = gaussKernCompute(X.row(i).t(), X.row(i).t());
+        kuu(i, i) += whiteKernCompute(0);
+    }
+    
+    return kuu;
 }
 
 auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X, int q) -> arma::Mat<double> {
