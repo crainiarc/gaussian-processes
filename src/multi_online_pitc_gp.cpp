@@ -47,6 +47,7 @@ auto MultiOutputOnlinePITCGP::setHyperParameters(MultiOutputHyperparameters hype
 }
 
 auto MultiOutputOnlinePITCGP::setAutoLearn(bool autoLearn) {
+    mAutoLearn = autoLearn;
 }
 
 auto MultiOutputOnlinePITCGP::learn() {
