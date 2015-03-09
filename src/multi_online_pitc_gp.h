@@ -22,6 +22,10 @@ struct MultiOutputHyperparameters {
     
     arma::Mat<double> precisionYs;
     arma::Mat<double> precisionUs;
+    
+    // Will be computed once assigned to a GP
+    arma::Mat<double> precisionYsInv;
+    arma::Mat<double> precisionUsInv;
 };
 
 
@@ -49,7 +53,7 @@ protected:
     arma::Mat<double> mTrainingSet;
     arma::Mat<double> mLatentVariables;
     arma::Col<double> mObservations;
-    MultiOutputHyperparameters mHyperparameters;
+    MultiOutputHyperparameters mHypers;
     
     arma::Mat<double> mGlobalD;
     arma::Mat<double> mGlobalE;
