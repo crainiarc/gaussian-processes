@@ -72,6 +72,7 @@ auto MultiOutputOnlinePITCGP::initHyperparameters() -> void {
     mHypers.precisionUsInv = 1.0 / mHypers.precisionUs;
     
     mKuu = computeKuu(mLatentVariables);
+    mKuuCholesky = arma::chol(mKuu);
 }
 
 auto MultiOutputOnlinePITCGP::linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double> {
@@ -104,6 +105,25 @@ auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X) -> arma::Ma
         for (auto n1 = 0; n1 < N; ++n1) {
             auto idx = (q1 * N) + n1;
             kff(idx, idx) = whiteKernCompute(q1 + 1);
+        }
+    }
+    
+    return kff;
+}
+
+auto MultiOutputOnlinePITCGP::computeKffSingular(const arma::Mat<double> &X, int q1, int q2) -> arma::Mat<double> {
+    auto kff = arma::Mat<double>(X.n_rows, X.n_rows);
+    
+    for (auto n1 = 0; n1 < X.n_rows; ++n1) {
+        for (auto n2 = 0; n2 < n1; ++n2) {
+            kff(n1, n2) = ggXggKernCompute(X.row(n1).t(), X.row(n2).t(), q1 + 1, q2 + 1);
+            kff(n2, n1) = kff(n1, n2);
+        }
+    }
+    
+    if (q1 == q2) {
+        for (auto n = 0; n < X.n_rows; ++n) {
+            kff(n, n) = whiteKernCompute(q1 + 1);
         }
     }
     

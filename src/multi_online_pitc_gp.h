@@ -57,12 +57,14 @@ protected:
     MultiOutputHyperparameters mHypers;
     
     arma::Mat<double> mKuu;
+    arma::Mat<double> mKuuCholesky;
     arma::Mat<double> mGlobalD;
     arma::Mat<double> mGlobalE;
     
     auto initHyperparameters() -> void;
     auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double>;
     auto computeKff(const arma::Mat<double> &X) -> arma::Mat<double>;
+    auto computeKffSingular(const arma::Mat<double> &X, int q1, int q2) -> arma::Mat<double>;
     auto computeKfu(const arma::Mat<double> &X) -> arma::Mat<double>;
     auto computeKfuSingular(const arma::Mat<double> &X, int q) -> arma::Mat<double>;
     auto computeKuu(const arma::Mat<double> &X) -> arma::Mat<double>;
