@@ -96,26 +96,44 @@ auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const 
     return arma::Mat<double>();
 }
 
-auto MultiOutputOnlinePITCGP::computekDiag(int pos) -> double {
+auto MultiOutputOnlinePITCGP::computeKDiag(int pos) -> double {
     return 0.0;
 }
 
 auto MultiOutputOnlinePITCGP::gaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y) -> double {
-    return 0.0;
+    auto result = arma::sum((arma::pow(x - y, 2) % mHypers.precisionUs.col(0)));
+    return mHypers.sigma2Us(0) * exp(-0.5 * result);
 }
 
 auto MultiOutputOnlinePITCGP::ggXggKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int posX, int posY) -> double {
-    return 0.0;
+    auto detBkInv = arma::prod(mHypers.precisionUsInv.col(posX));
+    auto preLInv = mHypers.precisionYsInv.col(posX) + mHypers.precisionYsInv.col(posY) + mHypers.precisionUsInv(posX);
+    auto lDet = arma::prod(preLInv);
+    auto lInv = 1.0 / preLInv;
+    
+    auto result = exp(-0.5 * arma::sum((arma::pow(x - y, 2) % lInv)));
+    result *= mHypers.sigma2Ys(posX) * mHypers.sigma2Ys(posY) * mHypers.sigma2Us(posX);
+    return result * sqrt(detBkInv / lDet);
 }
 
 auto MultiOutputOnlinePITCGP::ggXgaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int pos) -> double {
-    return 0.0;
+    auto detBkInv = arma::prod(mHypers.precisionUsInv.col(0));
+    auto preLInv = mHypers.precisionYsInv.col(pos) + mHypers.precisionUsInv.col(0);
+    auto lDet = arma::prod(preLInv);
+    auto lInv = 1.0 / preLInv;
+    
+    auto result = exp(-0.5 * arma::sum((arma::prod(x - y, 2) % lInv)));
+    result *= mHypers.sigma2Ys(pos) * mHypers.sigma2Us(0) * sqrt(detBkInv / lDet);
+    return result;
 }
 
 auto MultiOutputOnlinePITCGP::whiteKernCompute(int pos) -> double {
-    return 0.0;
+    return mHypers.variances(pos);
 }
 
 auto MultiOutputOnlinePITCGP::ggDiagKernCompute(int pos) -> double {
-    return 0.0;
+    auto detBkInv = arma::prod(mHypers.precisionUsInv.col(pos));
+    auto lDet = arma::prod((2.0 * mHypers.precisionYsInv.col(pos)) + mHypers.precisionUsInv.col(pos));
+    auto result = mHypers.sigma2Ys(pos) * mHypers.sigma2Ys(pos) * mHypers.sigma2Us(pos);
+    return result * sqrt(detBkInv / lDet);
 }
