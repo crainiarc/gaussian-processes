@@ -72,7 +72,7 @@ auto MultiOutputOnlinePITCGP::initHyperparameters() -> void {
 
 auto MultiOutputOnlinePITCGP::linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double> {
     auto observations = arma::Col<double>();
-    
+
     for (auto i = 0; i < obs.n_cols; ++i) {
         observations.insert_rows(observations.n_rows, obs.col(i));
     }
@@ -94,4 +94,28 @@ auto MultiOutputOnlinePITCGP::computeKuu(const arma::Mat<double> &X) -> arma::Ma
 
 auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X, int q) -> arma::Mat<double> {
     return arma::Mat<double>();
+}
+
+auto MultiOutputOnlinePITCGP::computekDiag(int pos) -> double {
+    return 0.0;
+}
+
+auto MultiOutputOnlinePITCGP::gaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y) -> double {
+    return 0.0;
+}
+
+auto MultiOutputOnlinePITCGP::ggXggKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int posX, int posY) -> double {
+    return 0.0;
+}
+
+auto MultiOutputOnlinePITCGP::ggXgaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int pos) -> double {
+    return 0.0;
+}
+
+auto MultiOutputOnlinePITCGP::whiteKernCompute(int pos) -> double {
+    return 0.0;
+}
+
+auto MultiOutputOnlinePITCGP::ggDiagKernCompute(int pos) -> double {
+    return 0.0;
 }

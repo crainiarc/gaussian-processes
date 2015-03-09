@@ -64,6 +64,15 @@ protected:
     auto computeKfu(const arma::Mat<double> &X, int q) -> arma::Mat<double>;
     auto computeKuu(const arma::Mat<double> &X) -> arma::Mat<double>;
     auto computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X, int q) -> arma::Mat<double>;
+    auto computekDiag(int pos) -> double;
+    
+private:
+    // Harded covariance functions
+    auto gaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y) -> double;
+    auto ggXggKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int posX, int posY) -> double;
+    auto ggXgaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int pos) -> double;
+    auto whiteKernCompute(int pos) -> double;
+    auto ggDiagKernCompute(int pos) -> double;
 };
 
 #endif /* defined(__GaussianProcess__multi_online_pitc_gp__) */
