@@ -8,13 +8,13 @@
 
 #include "multi_online_pitc_gp.h"
 
-MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, arma::Mat<double> latentVars, MultiOutputHyperparameters hypers) :
+MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<double> &latentVars, MultiOutputHyperparameters hypers) :
     mBlockSize(blockSize), mLatentVariables(latentVars), mHyperparameters(hypers)
 {
     autoLearn = true;
 }
 
-MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, arma::Mat<double> latentVars, MultiOutputHyperparameters hypers, bool autoLearn) :
+MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<double> &latentVars, MultiOutputHyperparameters hypers, bool autoLearn) :
     mBlockSize(blockSize), mLatentVariables(latentVars), mHyperparameters(hypers), mAutoLearn(autoLearn)
 {
 }
@@ -60,18 +60,18 @@ auto MultiOutputOnlinePITCGP::initHyperparameters() {
 auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double> {
 }
 
-auto MultiOutputOnlinePITCGP::computeKff(arma::Mat<double> X, int q) -> arma::Mat<double> {
+auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X, int q) -> arma::Mat<double> {
     return arma::Mat<double>;
 }
 
-auto MultiOutputOnlinePITCGP::computeKfu(arma::Mat<double> X, int q) -> arma::Mat<double> {
+auto MultiOutputOnlinePITCGP::computeKfu(const arma::Mat<double> &X, int q) -> arma::Mat<double> {
     return arma::Mat<double>;
 }
 
-auto MultiOutputOnlinePITCGP::computeKuu(arma::Mat<double> X) -> arma::Mat<double> {
+auto MultiOutputOnlinePITCGP::computeKuu(const arma::Mat<double> &X) -> arma::Mat<double> {
     return arma::Mat<double>;
 }
 
-auto MultiOutputOnlinePITCGP::computeKtf(arma::Mat<double> X_star, arma::Mat<double> X, int q) -> arma::Mat<double> {
+auto MultiOutputOnlinePITCGP::computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X, int q) -> arma::Mat<double> {
     return arma::Mat<double>;
 }

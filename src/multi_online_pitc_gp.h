@@ -29,8 +29,8 @@ class MultiOutputOnlinePITCGP {
     friend class MultiOutputOnlinePITCGPTest;
     
 public:
-    MultiOutputOnlinePITCGP(int blockSize, arma::Mat<double> latentVars, MultiOutputHyperparameters hypers);
-    MultiOutputOnlinePITCGP(int blockSize, arma::Mat<double> latentVars, MultiOutputHyperparameters hypers, bool autoLearn);
+    MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<double> &latentVars, MultiOutputHyperparameters hypers);
+    MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<double> &latentVars, MultiOutputHyperparameters hypers, bool autoLearn);
     
     auto setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &obs) -> void;
     auto addTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &obs) -> void;
@@ -56,10 +56,10 @@ protected:
     
     auto initHyperparameters() -> void;
     auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double>;
-    auto computeKff(arma::Mat<double> X, int q) -> arma::Mat<double>;
-    auto computeKfu(arma::Mat<double> X, int q) -> arma::Mat<double>;
-    auto computeKuu(arma::Mat<double> X) -> arma::Mat<double>;
-    auto computeKtf(arma::Mat<double> X_star, arma::Mat<double> X, int q) -> arma::Mat<double>;
+    auto computeKff(const arma::Mat<double> &X, int q) -> arma::Mat<double>;
+    auto computeKfu(const arma::Mat<double> &X, int q) -> arma::Mat<double>;
+    auto computeKuu(const arma::Mat<double> &X) -> arma::Mat<double>;
+    auto computeKtf(const arma::Mat<double> &X_star, const arma::Mat<double> &X, int q) -> arma::Mat<double>;
 };
 
 #endif /* defined(__GaussianProcess__multi_online_pitc_gp__) */
