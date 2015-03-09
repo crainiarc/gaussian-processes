@@ -71,7 +71,13 @@ auto MultiOutputOnlinePITCGP::initHyperparameters() -> void {
 }
 
 auto MultiOutputOnlinePITCGP::linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double> {
-    return arma::Col<double>();
+    auto observations = arma::Col<double>();
+    
+    for (auto i = 0; i < obs.n_cols; ++i) {
+        observations.insert_rows(observations.n_rows, obs.col(i));
+    }
+    
+    return observations;
 }
 
 auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X, int q) -> arma::Mat<double> {
