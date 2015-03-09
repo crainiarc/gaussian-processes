@@ -12,11 +12,13 @@ MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<
     mBlockSize(blockSize), mLatentVariables(latentVars), mHyperparameters(hypers)
 {
     autoLearn = true;
+    initHyperparameters();
 }
 
 MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<double> &latentVars, MultiOutputHyperparameters hypers, bool autoLearn) :
     mBlockSize(blockSize), mLatentVariables(latentVars), mHyperparameters(hypers), mAutoLearn(autoLearn)
 {
+    initHyperparameters();
 }
 
 auto MultiOutputOnlinePITCGP::setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &obs) {
@@ -40,6 +42,8 @@ auto MultiOutputOnlinePITCGP::addTrainingSet(const arma::Mat<double> &data, cons
 }
 
 auto MultiOutputOnlinePITCGP::setHyperParameters(MultiOutputHyperparameters hypers) {
+    mHyperparameters = hypers;
+    initHyperparameters();
 }
 
 auto MultiOutputOnlinePITCGP::setAutoLearn(bool autoLearn) {
