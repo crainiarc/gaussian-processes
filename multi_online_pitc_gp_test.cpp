@@ -24,3 +24,26 @@ TEST(BasicOperations, InverseReciprocalTest) {
         }
     }
 }
+
+TEST(BasicOperations, SchurProductTest) {
+    arma::Col<double> A = {1, 1, 1, 2};
+    arma::Col<double> B = {2, 3, 4, 5};
+    arma::Col<double> expected = {2, 3, 4, 10};
+    arma::Col<double> actual = A % B;
+    
+    ASSERT_EQ(A.n_rows, B.n_rows);
+    ASSERT_EQ(B.n_rows, expected.n_rows);
+    ASSERT_EQ(expected.n_rows, actual.n_rows);
+    
+    for (unsigned int row = 0; row < expected.n_rows; ++row) {
+        ASSERT_FLOAT_EQ(expected(row), actual(row));
+    }
+}
+
+TEST(BasicOperations, SumTest) {
+    arma::Col<double> A = {1, 2, 3, 4};
+    auto actual = arma::sum(A);
+    auto expected = 10.0;
+    
+    ASSERT_FLOAT_EQ(expected, actual);
+}
