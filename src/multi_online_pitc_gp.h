@@ -45,10 +45,14 @@ public:
 protected:
     int mBlockSize;
     bool mAutoLearn;
+    
     arma::Mat<double> mTrainingSet;
     arma::Mat<double> mObservations;
     arma::Mat<double> mLatentVariables;
     MultiOutputHyperparameters mHyperparameters;
+    
+    arma::Mat<double> mGlobalD;
+    arma::Mat<double> mGlobalE;
     
     auto initHyperparameters() -> void;
     auto computeKff(arma::Mat<double> X, int q) -> arma::Mat<double>;
