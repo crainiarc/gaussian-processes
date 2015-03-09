@@ -20,6 +20,14 @@ MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, arma::Mat<double
 }
 
 auto MultiOutputOnlinePITCGP::setTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &obs) {
+    mTrainingSet = data;
+    mObservations = obs;
+    mGlobalD = arma::Mat<double>;
+    mGlobalE = arma::Mat<double>;
+    
+    if (mAutoLearn) {
+        learn();
+    }
 }
 
 auto MultiOutputOnlinePITCGP::addTrainingSet(const arma::Mat<double> &data, const arma::Mat<double> &obs) {
