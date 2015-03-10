@@ -82,7 +82,17 @@ auto MultiOutputOnlinePITCGP::learn() -> void {
 }
 
 auto MultiOutputOnlinePITCGP::predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
-    return std::make_tuple(arma::Mat<double>(), arma::Mat<double>());
+    auto KuuDCholesky = arma::chol(mKuu + mGlobalD);
+    auto Ktu = computeKfu(testData);
+    auto v1 = arma::solve(KuuDCholesky, Ktu.t());
+    
+    auto v2 = arma::solve(mKuuCholesky, Ktu.t());
+    auto F_Xt = computeKff(testData) - v2.t() * v2;
+    
+    auto mu = Ktu * arma::solve(KuuDCholesky.t(), arma::solve(KuuDCholesky, mGlobalE));
+    auto cov = blockDiagonal(F_Xt, mBlockSize) + v1.t() * v1; // Add noise?
+    
+    return std::make_tuple(mu, cov);
 }
 
 auto MultiOutputOnlinePITCGP::predictMean(const arma::Mat<double> &testData) -> arma::Mat<double> {
