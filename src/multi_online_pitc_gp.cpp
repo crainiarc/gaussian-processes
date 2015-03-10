@@ -53,6 +53,32 @@ auto MultiOutputOnlinePITCGP::setAutoLearn(bool autoLearn) -> void {
 }
 
 auto MultiOutputOnlinePITCGP::learn() -> void {
+    arma::Mat<double> DSummary = arma::zeros<arma::Mat<double>>(mLatentVariables.n_rows, mLatentVariables.n_rows);
+    arma::Mat<double> ESummary = arma::zeros<arma::Mat<double>>(mLatentVariables.n_rows, 1);
+    auto N = mTrainingSet.n_rows / mOutputDimensions;
+    
+    // Compute slice summary
+    for (auto q = 0; q < mOutputDimensions; ++q) {
+        auto X_qt = mTrainingSet.rows(q * N, (q * N) + N);
+        auto Y_qt = mObservations.rows(q * N, (q * N) + N);
+        auto K_Xt_u = computeKfuSingular(X_qt, q);
+        
+        auto FX_qt = computeKffSingular(K_Xt_u, q, q);
+        FX_qt -= K_Xt_u * arma::solve(mKuuCholesky.t(), arma::solve(mKuuCholesky, K_Xt_u.t())); // Add noise?
+        
+        auto FX_qtCholesky = arma::chol(FX_qt);
+        auto v = arma::solve(FX_qtCholesky, K_Xt_u);
+        DSummary += v.t() * v;
+        ESummary += K_Xt_u.t() * arma::solve(FX_qtCholesky.t(), arma::solve(FX_qtCholesky, Y_qt));
+    }
+    
+    // Assimilate
+    mGlobalD += DSummary;
+    mGlobalE += ESummary;
+    
+    // Clear the slice
+    mTrainingSet.set_size(0, mTrainingSet.n_cols);
+    mObservations.set_size(0, mOutputDimensions);
 }
 
 auto MultiOutputOnlinePITCGP::predict(const arma::Mat<double> &testData) -> std::tuple<arma::Mat<double>, arma::Mat<double>> {
