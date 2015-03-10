@@ -63,6 +63,7 @@ protected:
     
     auto initHyperparameters() -> void;
     auto linearizeObservations(const arma::Mat<double> &obs) -> arma::Col<double>;
+    auto blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double>;
     auto computeKff(const arma::Mat<double> &X) -> arma::Mat<double>;
     auto computeKffSingular(const arma::Mat<double> &X, int q1, int q2) -> arma::Mat<double>;
     auto computeKfu(const arma::Mat<double> &X) -> arma::Mat<double>;

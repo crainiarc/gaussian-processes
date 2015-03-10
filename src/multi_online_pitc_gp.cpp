@@ -111,6 +111,24 @@ auto MultiOutputOnlinePITCGP::linearizeObservations(const arma::Mat<double> &obs
     return observations;
 }
 
+auto MultiOutputOnlinePITCGP::blockDiagonal(const arma::Mat<double> &mat, const int blockSize) -> arma::Mat<double> {
+    if (mat.n_cols != mat.n_rows) {
+        // Not a square matrix
+        throw std::logic_error("Matrix 'mat' is not a square matrix");
+        
+    } else if (mat.n_cols % blockSize != 0) {
+        // Matrix cannot be blocked evenly
+        throw std::logic_error("Matrix cannot be evenly blocked");
+    }
+    
+    arma::Mat<double> bMat = arma::Mat<double>(mat.n_rows, mat.n_cols);
+    for (unsigned int i = 0; i < mat.n_cols; i += blockSize) {
+        auto lastRow = i + blockSize - 1;
+        bMat.submat(i, i, lastRow, lastRow) = mat.submat(i, i, lastRow, lastRow);
+    }
+    return bMat;
+}
+
 auto MultiOutputOnlinePITCGP::computeKff(const arma::Mat<double> &X) -> arma::Mat<double> {
     auto kff = arma::Mat<double>(X.n_rows, X.n_rows);
     auto N = X.n_rows / mOutputDimensions;
