@@ -18,7 +18,7 @@ auto readTrainingFile(const char *fileName) -> std::tuple<arma::Cube<double>, ar
 auto readTestFile(const char *fileName) -> std::tuple<arma::Cube<double>, arma::Cube<double>>;
 
 auto main(int argc, const char * argv[]) -> int {
-    if (argc != 5) {
+    if (argc != 6) {
         std::cout << "Invalid number of arguments.\n";
         exit(0);
     }
