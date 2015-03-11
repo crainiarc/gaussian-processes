@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Keng Kiat Lim. All rights reserved.
 //
 
-#include "multi_online_pitc_gp.h"
+#include "online_pitc.h"
 
 MultiOutputOnlinePITCGP::MultiOutputOnlinePITCGP(int blockSize, const arma::Mat<double> &latentVars, MultiOutputHyperparameters hypers) :
     mBlockSize(blockSize), mLatentVariables(latentVars), mHypers(hypers)
@@ -64,7 +64,7 @@ auto MultiOutputOnlinePITCGP::learn() -> void {
         auto K_Xt_u = computeKfuSingular(X_qt, q);
         
         auto FX_qt = computeKffSingular(K_Xt_u, q, q);
-        FX_qt -= K_Xt_u * arma::solve(mKuuCholesky.t(), arma::solve(mKuuCholesky, K_Xt_u.t())); // Add noise?
+        FX_qt -= K_Xt_u * arma::solve(mKuuCholesky.t(), arma::solve(mKuuCholesky, K_Xt_u.t())); // XXX: Add noise?
         
         auto FX_qtCholesky = arma::chol(FX_qt);
         auto v = arma::solve(FX_qtCholesky, K_Xt_u);
@@ -90,7 +90,7 @@ auto MultiOutputOnlinePITCGP::predict(const arma::Mat<double> &testData) -> std:
     auto F_Xt = computeKff(testData) - v2.t() * v2;
     
     auto mu = Ktu * arma::solve(KuuDCholesky.t(), arma::solve(KuuDCholesky, mGlobalE));
-    auto cov = blockDiagonal(F_Xt, mBlockSize) + v1.t() * v1; // Add noise?
+    auto cov = blockDiagonal(F_Xt, mBlockSize) + v1.t() * v1; // XXX: Add noise?
     
     return std::make_tuple(mu, cov);
 }

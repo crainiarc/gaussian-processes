@@ -73,7 +73,7 @@ protected:
     auto computeKDiag(int pos) -> double;
     
 private:
-    // Harded covariance functions
+    // Hard coded covariance functions
     auto gaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y) -> double;
     auto ggXggKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int posX, int posY) -> double;
     auto ggXgaussKernCompute(const arma::Col<double> &x, const arma::Col<double> &y, int pos) -> double;
