@@ -8,11 +8,10 @@
 
 #include <armadillo>
 #include "gtest/gtest.h"
-#include "multi_online_pitc_gp.h"
+#include "online_pitc.h"
 
 TEST(BasicOperations, InverseReciprocalTest) {
-    arma::Mat<double> mat = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-    mat.reshape(3, 3);
+    arma::Mat<double> mat = arma::randu<arma::Mat<double>>(12, 12);
     arma::Mat<double> inv = 1.0 / mat;
     
     ASSERT_EQ(mat.n_rows, inv.n_rows);
